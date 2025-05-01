@@ -18,9 +18,8 @@ PatientX.AI offers:
 
 ## Features
 
-- **Topic Modeling:** Uses BERTopic to identify common themes and group them into topics related to the treatment journey.
+- **Topic Modeling:** Uses BERTopic to identify common themes and group them into topics related to the healthcare journey.
 - **Topic Visualization:** Generates visualizations to help experts interpret topics identified through topic modeling
-- **Journey Map Visualization:** Generates a user-friendly journey map, visually outlining typical patient experiences and symptom patterns.
 
 ## Project Structure
 ```
