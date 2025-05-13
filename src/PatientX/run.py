@@ -134,7 +134,7 @@ def run_bertopic_model(documents: List[str], embeddingspath: Optional[Path], res
          'am', 'by', 'that', 'from', 'it', 'is', 'in', 'you', 'also', 'very', 'had', 'a', 'an',
          'for'}.union(stop_words.STOP_WORDS))
 
-    vectorizer_model = CountVectorizer(stop_words=custom_stop_words)
+    vectorizer_model = CountVectorizer(stop_words=custom_stop_words, ngram_range=(1,3))
     ctfidf_model = ClassTfidfTransformer(reduce_frequent_words=True)
     dimensionality_reduction_model = get_dimensionality_reduction_model(dimensionality_reduction)
     clustering_model = get_clustering_model(clustering_model)
@@ -169,6 +169,20 @@ def run_bertopic_model(documents: List[str], embeddingspath: Optional[Path], res
     # TODO: update loading of bertopic model to work with safetensors approach
 
     bertopic_model.save(result_path / "bertopic_model_dir", serialization="safetensors", save_ctfidf=True)
+
+    # Save visualizations
+    topic_visualization = bertopic_model.visualize_topics()
+    term_decline_per_topic = bertopic_model.visualize_term_rank()
+    hierarchical_topics = bertopic_model.hierarchical_topics(documents)
+    hierarchical_clustering = bertopic_model.visualize_hierarchy(hierarchical_topics=hierarchical_topics)
+    document_visualization = bertopic_model.visualize_documents(documents)
+
+    # topic_visualization.write_html(result_path / "visualizations" / "topic_clusters.html")
+    topic_visualization.write_image(result_path / "visualizations" / "topic_clusters.png")
+    term_decline_per_topic.write_image(result_path / "visualizations" / "term_decline.png")
+    hierarchical_clustering.write_image(result_path / "visualizations" / "hierarchical_clustering.png")
+    document_visualization.write_image(result_path / "visualizations" / "document_clusters.png")
+
 
     results_df = bertopic_model.get_topic_info()
     rep_docs = results_df['Representative_Docs'].tolist()
